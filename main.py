@@ -4,7 +4,7 @@ from scoreboard import Scoreboard
 from time import sleep
 from turtle import Screen
 
-SLEEP = 0
+SLEEP = 0.2
 DISTANCE = 15
 
 screen = Screen()
@@ -18,9 +18,6 @@ food = Food()
 scoreboard = Scoreboard()
 scoreboard.change_score()
 
-xcord = snake.lead.xcor()
-ycord = snake.lead.ycor()
-
 
 screen.listen()
 screen.onkey(snake.up, "Up")
@@ -30,6 +27,8 @@ screen.onkey(snake.right, "Right")
 
 game_on = True
 while game_on:
+  lead_x = snake.lead.xcor()
+  lead_y = snake.lead.ycor()
   screen.update()
   sleep(SLEEP)
   snake.move()
@@ -39,19 +38,15 @@ while game_on:
     scoreboard.change_score()
     food.refresh()
     snake.add_to_snake(
-      snake.block_chain[-1].xcor(),
-      snake.block_chain[-1].ycor()
+      snake.block_chain[-1].position()
     )
   #Wall Collision Check
-  if abs(xcord) > 280 or abs(ycord) > 280:
-    print("wall")
+  if abs(lead_x) > 280 or abs(lead_y) > 280:
     game_on = False
     scoreboard.game_over()
   #Tail Collision Check
   for block in snake.block_chain[1:]:
-    print(block.xcor(), block.ycor())
     if snake.lead.distance(block) < DISTANCE:
-      print("tail")
       game_on = False
       scoreboard.game_over()
   
